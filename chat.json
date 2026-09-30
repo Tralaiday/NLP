@@ -1,0 +1,466 @@
+{
+  "responderUsername": "GitHub Copilot",
+  "initialLocation": "panel",
+  "requests": [
+    {
+      "requestId": "09585590-4f47-46f3-aca3-350b4bb7b408",
+      "message": {
+        "parts": [
+          {
+            "range": {
+              "start": 0,
+              "endExclusive": 107
+            },
+            "editorRange": {
+              "startLineNumber": 1,
+              "startColumn": 1,
+              "endLineNumber": 1,
+              "endColumn": 108
+            },
+            "text": "giải thích chi tiết chức năng và bên trong các hàm trong API ngram_lm.py, và hướng dẫn ghi chú cho từng hàm",
+            "kind": "text"
+          }
+        ],
+        "text": "giải thích chi tiết chức năng và bên trong các hàm trong API ngram_lm.py, và hướng dẫn ghi chú cho từng hàm"
+      },
+      "variableData": {
+        "variables": []
+      },
+      "response": [
+        {
+          "kind": "autoModeResolution",
+          "resolved": {
+            "id": "gpt-5.6-luna",
+            "name": "gpt-5.6-luna"
+          }
+        },
+        {
+          "kind": "thinking",
+          "value": "**Reviewing next steps**\n\nI need to provide the answer in Vietnamese, but first, I should inspect the repo to understand what I'm working with. If I don't have a corresponding action skill, I might need to look for the necessary tools or consider delegating this task. It sounds like I’ll focus on a single file explanation directly. For that, I need to inspect the files carefully to gather the right information.",
+          "id": "71d97285-b19e-469d-a512-e95f99db8e36",
+          "reasoningDurationMs": 0,
+          "generatedTitle": "Reviewing next steps"
+        },
+        {
+          "value": "Mình sẽ đọc toàn bộ `ngram_lm.py` cùng các phần liên quan (nếu có), sau đó giải thích luồng dữ liệu, từng hàm và đưa mẫu ghi chú phù hợp ngay trong mã.",
+          "isTrusted": false,
+          "supportThemeIcons": false,
+          "supportHtml": false,
+          "supportAlertSyntax": false
+        },
+        {
+          "kind": "toolInvocationSerialized",
+          "toolCallId": "call_xpQzT8IycuW8itAT2ajqrgoZ",
+          "toolId": "glob",
+          "source": {
+            "type": "internal",
+            "label": "Built-In"
+          },
+          "invocationMessage": {
+            "value": "Find files matching `**/README*`",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "pastTenseMessage": {
+            "value": "Find files matching `**/README*`",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "isConfirmed": {
+            "type": 1
+          },
+          "isComplete": true,
+          "toolSpecificData": {
+            "kind": "search"
+          },
+          "isAttachedToThinking": false,
+          "generatedTitle": "Reviewed 6 files and explained functions and details"
+        },
+        {
+          "kind": "toolInvocationSerialized",
+          "toolCallId": "call_5j9A0UdJTG0DyDlUxQgwf32w",
+          "toolId": "glob",
+          "source": {
+            "type": "internal",
+            "label": "Built-In"
+          },
+          "invocationMessage": {
+            "value": "Find files matching `**/ngram_lm.py`",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "pastTenseMessage": {
+            "value": "Find files matching `**/ngram_lm.py`",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "isConfirmed": {
+            "type": 1
+          },
+          "isComplete": true,
+          "toolSpecificData": {
+            "kind": "search"
+          },
+          "isAttachedToThinking": false,
+          "generatedTitle": "Reviewed 6 files and explained functions and details"
+        },
+        {
+          "kind": "toolInvocationSerialized",
+          "toolCallId": "call_NXJD4elQ3wTYnkrBHp2mQIQZ",
+          "toolId": "rg",
+          "source": {
+            "type": "internal",
+            "label": "Built-In"
+          },
+          "invocationMessage": {
+            "value": "Search for `ngram_lm|NGram|ngram`",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "pastTenseMessage": {
+            "value": "Search for `ngram_lm|NGram|ngram`",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "isConfirmed": {
+            "type": 1
+          },
+          "isComplete": true,
+          "toolSpecificData": {
+            "kind": "search"
+          },
+          "isAttachedToThinking": false,
+          "generatedTitle": "Reviewed 6 files and explained functions and details"
+        },
+        {
+          "kind": "toolInvocationSerialized",
+          "toolCallId": "call_1p0lrHisJb37JOZEhhrybQIW",
+          "toolId": "view",
+          "source": {
+            "type": "internal",
+            "label": "Built-In"
+          },
+          "invocationMessage": {
+            "value": "Read [](file:///c%3A/NLP/Lab2/src/ngram_lm.py)",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "pastTenseMessage": {
+            "value": "Read [](file:///c%3A/NLP/Lab2/src/ngram_lm.py)",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "isConfirmed": {
+            "type": 1
+          },
+          "isComplete": true,
+          "resultDetails": {
+            "input": "{\n  \"path\": \"C:\\\\NLP\\\\Lab2\\\\src\\\\ngram_lm.py\"\n}",
+            "inputLanguage": "json",
+            "output": [
+              {
+                "type": "embed",
+                "value": "from collections import Counter\r\nimport math\r\n\r\nclass NGramLanguageModel:\r\n\r\n    # Hàm dựng khởi tạo cho mô hình ngôn ngữ n-gram\r\n    # Input:\r\n    # n: số lượng từ trong n-gram (1, 2 hoặc 3)\r\n    # smoothing: nếu True, áp dụng kỹ thuật smoothing cho xác suất, nếu False, không áp dụng smoothing\r\n    def __init__(self, n, smoothing = False):\r\n        if n not in (1, 2, 3):\r\n            raise ValueError(\"n must be 1, 2, or 3\")\r\n        \r\n        self.n = n\r\n        self.smoothing = smoothing\r\n\r\n        self.vocabulary = set()\r\n        self.ngram_counts = Counter()\r\n        self.context_counts = Counter()\r\n        self.total_tokens = 0\r\n        self.model_type = None\r\n\r\n    def __build_vocabulary(self, corpus):\r\n        self.vocabulary = {\r\n            word\r\n            for sentence in corpus\r\n            for word in sentence\r\n        }\r\n\r\n    def __count_ngrams(self, corpus):\r\n        for sentence in corpus:\r\n            self.total_tokens += len(sentence)\r\n\r\n            for index in range(len(sentence) - self.n + 1):\r\n                ngram = tuple(sentence[index:index + self.n])\r\n\r\n                if self.n == 1:\r\n                    ngram = ngram[0]\r\n                    context = None\r\n                else:\r\n                    context = ngram[:-1]\r\n\r\n                self.ngram_counts[ngram] += 1\r\n                self.context_counts[context] += 1\r\n\r\n    def __train_unigram(self):\r\n        self.model_type = 'unigram'\r\n\r\n    def __train_bigram(self):\r\n        self.model_type = 'bigram'\r\n\r\n    def __train_trigram(self):\r\n        self.model_type = 'trigram'\r\n\r\n    def fit(self, corpus):\r\n        self.__build_vocabulary(corpus)\r\n        self.__count_ngrams(corpus)\r\n\r\n        if self.n == 1:\r\n            self.__train_unigram()\r\n        elif self.n == 2:\r\n            self.__train_bigram()\r\n        else:\r\n            self.__train_trigram()\r\n\r\n        return self\r\n\r\n    def probability(self, context, word):\r\n        if self.n == 1:\r\n            ngram = word\r\n            context_key = None\r\n        else:\r\n            context = tuple(context[-(self.n - 1):])\r\n            ngram = context + (word,)\r\n            context_key = context\r\n\r\n        ngram_count = self.ngram_counts[ngram]\r\n        context_count = self.context_counts[context_key]\r\n\r\n        if self.smoothing:\r\n            vocabulary_size = len(self.vocabulary)\r\n            return (ngram_count + 1) / (context_count + vocabulary_size)\r\n\r\n        if context_count == 0:\r\n            return 0.0\r\n\r\n        return ngram_count / context_count\r\n\r\n    def sentence_probability(self, sentence):\r\n        probability = 1.0\r\n\r\n        for index, word in enumerate(sentence):\r\n            if self.n == 1:\r\n                context = []\r\n            else:\r\n                context = sentence[\r\n                    max(0, index - self.n + 1):index\r\n                ]\r\n\r\n            probability *= self.probability(context, word)\r\n\r\n        return probability\r\n\r\n    def sentence_log_probability(self, sentence):\r\n        log_probability = 0.0\r\n\r\n        for index, word in enumerate(sentence):\r\n            if self.n == 1:\r\n                context = []\r\n            else:\r\n                context = sentence[\r\n                    max(0, index - self.n + 1):index\r\n                ]\r\n\r\n            probability = self.probability(context, word)\r\n\r\n            if probability == 0:\r\n                return float('-inf')\r\n\r\n            log_probability += math.log(probability)\r\n\r\n        return log_probability\r\n\r\n    def next_word_distribution(self, context):\r\n        distribution = {}\r\n\r\n        for word in self.vocabulary:\r\n            distribution[word] = self.probability(context, word)\r\n\r\n        return distribution",
+                "isText": true,
+                "mimeType": "text/plain"
+              }
+            ],
+            "isError": false
+          },
+          "isAttachedToThinking": false,
+          "generatedTitle": "Reviewed 6 files and explained functions and details"
+        },
+        {
+          "kind": "toolInvocationSerialized",
+          "toolCallId": "call_upNvuepi1zr7pMhinUdTFkF9",
+          "toolId": "glob",
+          "source": {
+            "type": "internal",
+            "label": "Built-In"
+          },
+          "invocationMessage": {
+            "value": "Find files matching `**/*`",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "pastTenseMessage": {
+            "value": "Find files matching `**/*`",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "isConfirmed": {
+            "type": 1
+          },
+          "isComplete": true,
+          "toolSpecificData": {
+            "kind": "search"
+          },
+          "isAttachedToThinking": false,
+          "generatedTitle": "Reviewed 6 files and explained functions and details"
+        },
+        {
+          "kind": "toolInvocationSerialized",
+          "toolCallId": "call_UQT21gCoEFPdYcifBVKfGyom",
+          "toolId": "rg",
+          "source": {
+            "type": "internal",
+            "label": "Built-In"
+          },
+          "invocationMessage": {
+            "value": "Search for `ngram_lm|train|perplexity|probability|generate`",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "pastTenseMessage": {
+            "value": "Search for `ngram_lm|train|perplexity|probability|generate`",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "isConfirmed": {
+            "type": 1
+          },
+          "isComplete": true,
+          "toolSpecificData": {
+            "kind": "search"
+          },
+          "isAttachedToThinking": false,
+          "generatedTitle": "Reviewed 6 files and explained functions and details"
+        },
+        {
+          "kind": "thinking",
+          "value": "**Explaining functions and details**\n\nI need to provide a detailed explanation and take notes about the functions. It might be important to identify any bugs or limitations as well. To get a clearer understanding of the processes involved, maybe I should read through the prediction.md for guidance on usage. This way, I can ensure that I'm thorough and helpful in my explanations and avoid any potential confusion. Let's dive into this!",
+          "id": "58a5f060-0171-4e6a-86be-e5dcfc5c11cf",
+          "reasoningDurationMs": 0,
+          "generatedTitle": "Reviewed 6 files and explained functions and details"
+        },
+        {
+          "kind": "toolInvocationSerialized",
+          "toolCallId": "call_eKNl5vfiD0UrPoH842lJXbdg",
+          "toolId": "view",
+          "source": {
+            "type": "internal",
+            "label": "Built-In"
+          },
+          "invocationMessage": {
+            "value": "Read [](file:///c%3A/NLP/Lab2/src/prediction.md)",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "pastTenseMessage": {
+            "value": "Read [](file:///c%3A/NLP/Lab2/src/prediction.md)",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "isConfirmed": {
+            "type": 1
+          },
+          "isComplete": true,
+          "resultDetails": {
+            "input": "{\n  \"path\": \"C:\\\\NLP\\\\Lab2\\\\src\\\\prediction.md\"\n}",
+            "inputLanguage": "json",
+            "output": [
+              {
+                "type": "embed",
+                "value": "Path does not exist",
+                "isText": true,
+                "mimeType": "text/plain"
+              }
+            ],
+            "isError": true
+          },
+          "isAttachedToThinking": false,
+          "generatedTitle": "Reviewed 6 files and explained functions and details"
+        },
+        {
+          "kind": "toolInvocationSerialized",
+          "toolCallId": "call_oqR9T9zfOi9UPMXbI80tNehs",
+          "toolId": "view",
+          "source": {
+            "type": "internal",
+            "label": "Built-In"
+          },
+          "invocationMessage": {
+            "value": "Read [](file:///c%3A/NLP/Lab2/src/experiments.ipynb), lines 1 to 20",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "pastTenseMessage": {
+            "value": "Read [](file:///c%3A/NLP/Lab2/src/experiments.ipynb), lines 1 to 20",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "isConfirmed": {
+            "type": 1
+          },
+          "isComplete": true,
+          "resultDetails": {
+            "input": "{\n  \"path\": \"C:\\\\NLP\\\\Lab2\\\\src\\\\experiments.ipynb\",\n  \"view_range\": [\n    1,\n    20\n  ]\n}",
+            "inputLanguage": "json",
+            "output": [
+              {
+                "type": "embed",
+                "value": "{\n \"cells\": [\n  {\n   \"cell_type\": \"code\",\n   \"execution_count\": 3,\n   \"id\": \"a8b7bc2c\",\n   \"metadata\": {},\n   \"outputs\": [],\n   \"source\": [\n    \"from collections import Counter\\n\",\n    \"\\n\",\n    \"import gzip\\n\",\n    \"import json\\n\",\n    \"import matplotlib.pyplot as plt\\n\",\n    \"import pandas as pd\\n\",\n    \"import re\"\n   ]\n  },\n  {\n   \"cell_type\": \"markdown\",",
+                "isText": true,
+                "mimeType": "application/json"
+              }
+            ],
+            "isError": false
+          },
+          "isAttachedToThinking": false,
+          "generatedTitle": "Reviewed 6 files and explained functions and details"
+        },
+        {
+          "kind": "thinking",
+          "value": "**Exploring the glob path**\n\nI’m noticing that the glob path prediction is pointing to C:\\NLP\\Lab2\\prediction.md instead of src. That’s interesting! I’ll need to take a look at this and see what it means for my work. Understanding the correct paths is important for ensuring everything functions properly, so I'll give it some thought and possibly adjust accordingly. It’s always good to clarify any potential confusion early on!",
+          "id": "b42a061c-35c6-4a10-87a3-a9dee8a848da",
+          "reasoningDurationMs": 0,
+          "generatedTitle": "Reviewed 6 files and explained functions and details"
+        },
+        {
+          "kind": "toolInvocationSerialized",
+          "toolCallId": "call_mwDurcZesGxWdwHEd67uUMRW",
+          "toolId": "view",
+          "source": {
+            "type": "internal",
+            "label": "Built-In"
+          },
+          "invocationMessage": {
+            "value": "Read [](file:///c%3A/NLP/Lab2/prediction.md)",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "pastTenseMessage": {
+            "value": "Read [](file:///c%3A/NLP/Lab2/prediction.md)",
+            "isTrusted": false,
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "supportAlertSyntax": false
+          },
+          "isConfirmed": {
+            "type": 1
+          },
+          "isComplete": true,
+          "resultDetails": {
+            "input": "{\n  \"path\": \"C:\\\\NLP\\\\Lab2\\\\prediction.md\"\n}",
+            "inputLanguage": "json",
+            "output": [
+              {
+                "type": "embed",
+                "value": "# Prediction\r\n\r\n**Prediction 1**: Khi chuyển unigram -> bigram -> trigram, vocabulary có thể tăng\r\n\r\n**Prediction 2**: Số lượng n-gram sẽ giảm dần\r\n\r\n**Prediction 3**: Mô hình bigram có khả năng gặp zero probability nhiều hơn\r\n\r\n**Prediction 4**: Mô hình trigram có perplexity thấp hơn trên training set\r\n\r\n**Prediction 5**: Nếu corpus rất nhỏ, trigram chưa chắc tốt hơn bigram",
+                "isText": true,
+                "mimeType": "text/plain"
+              }
+            ],
+            "isError": false
+          },
+          "isAttachedToThinking": false,
+          "generatedTitle": "Reviewed 6 files and explained functions and details"
+        },
+        {
+          "kind": "thinking",
+          "value": "**Reviewing comments and docstrings**\n\nI’m thinking about the current comments and the need to recommend some docstrings. Including sample docstrings or even the entire signatures could be helpful. I should mention the absence of parameter validation, like for corpus format and ensuring it's fit before checking probability, particularly with an empty corpus. Also, noting that `context_counts[context_key]` mutates the Counter on lookup seems like a minor but important detail to include. But then again, tests might not be necessary.",
+          "id": "8a67aef6-87d9-4adc-a882-aa78cc183beb",
+          "reasoningDurationMs": 0,
+          "generatedTitle": "Reviewed 6 files and explained functions and details"
+        },
+        {
+          "value": "## Tổng quan\n\nFile [ngram_lm.py](C:/NLP/Lab2/src/ngram_lm.py) cài đặt một mô hình ngôn ngữ n-gram đơn giản, hỗ trợ:\n\n- Unigram: `n = 1`\n- Bigram: `n = 2`\n- Trigram: `n = 3`\n- Tính xác suất từ tiếp theo\n- Tính xác suất của cả câu\n- Tính log-probability của câu\n- Sinh phân phối xác suất cho từ tiếp theo\n- Add-one/Laplace smoothing\n\nMô hình nhận corpus dưới dạng danh sách các câu, trong đó mỗi câu là danh sách token:\n\n```python\ncorpus = [\n    [\"tôi\", \"học\", \"NLP\"],\n    [\"tôi\", \"yêu\", \"NLP\"]\n]\n```\n\n---\n\n# 1. Thư viện được sử dụng\n\n```python\nfrom collections import Counter\nimport math\n```\n\n### `Counter`\n\n`Counter` là một dạng dictionary dùng để đếm số lần xuất hiện.\n\nVí dụ:\n\n```python\ncounter = Counter()\ncounter[\"tôi\"] += 1\ncounter[\"tôi\"] += 1\n\nprint(counter[\"tôi\"])  # 2\n```\n\nMột đặc điểm quan trọng là nếu truy cập key chưa tồn tại:\n\n```python\ncounter[\"không_tồn_tại\"]  # 0\n```\n\nĐiều này rất phù hợp với việc đếm n-gram.\n\n### `math`\n\nĐược sử dụng trong:\n\n```python\nmath.log(probability)\n```\n\nđể tính logarit tự nhiên của xác suất.\n\n---\n\n# 2. Lớp `NGramLanguageModel`\n\n```python\nclass NGramLanguageModel:\n```\n\nLớp này đại diện cho một mô hình ngôn ngữ n-gram.\n\nMô hình lưu lại:\n\n- Từ vựng\n- Số lần xuất hiện của từng n-gram\n- Số lần xuất hiện của từng context\n- Tổng số token\n- Loại mô hình đang sử dụng\n\n---\n\n# 3. Hàm `__init__`\n\n```python\ndef __init__(self, n, smoothing=False):\n```\n\n## Chức năng\n\nKhởi tạo mô hình n-gram.\n\n## Tham số\n\n### `n`\n\nSố lượng token trong n-gram:\n\n- `n = 1`: unigram\n- `n = 2`: bigram\n- `n = 3`: trigram\n\n### `smoothing`\n\nXác định có áp dụng smoothing hay không:\n\n- `False`: dùng xác suất cực đại thông thường\n- `True`: dùng add-one smoothing\n\n## Kiểm tra giá trị `n`\n\n```python\nif n not in (1, 2, 3):\n    raise ValueError(\"n must be 1, 2, or 3\")\n```\n\nMô hình chỉ hỗ trợ ba loại n-gram. Nếu truyền `n = 4`, chương trình dừng và báo lỗi.\n\n## Các thuộc tính được tạo\n\n```python\nself.n = n\nself.smoothing = smoothing\n```\n\nLưu cấu hình mô hình.\n\n```python\nself.vocabulary = set()\n```\n\nLưu tập các từ khác nhau trong corpus.\n\nVí dụ:\n\n```python\n{\"tôi\", \"học\", \"NLP\"}\n```\n\n```python\nself.ngram_counts = Counter()\n```\n\nLưu số lần xuất hiện của từng n-gram.\n\nVí dụ với bigram:\n\n```python\n{\n    (\"tôi\", \"học\"): 2,\n    (\"học\", \"NLP\"): 1\n}\n```\n\nRiêng unigram được lưu dưới dạng chuỗi, không phải tuple:\n\n```python\n{\n    \"tôi\": 2,\n    \"học\": 1\n}\n```\n\n```python\nself.context_counts = Counter()\n```\n\nLưu số lần xuất hiện của context.\n\nVí dụ với bigram:\n\n```python\n{\n    (\"tôi\",): 2,\n    (\"học\",): 1\n}\n```\n\n```python\nself.total_tokens = 0\n```\n\nTổng số token trong corpus.\n\n```python\nself.model_type = None\n```\n\nLưu loại mô hình dưới dạng chuỗi:\n\n```python\n\"unigram\"\n\"bigram\"\n\"trigram\"\n```\n\n## Ghi chú đề xuất\n\n```python\ndef __init__(self, n, smoothing=False):\n    \"\"\"\n    Khởi tạo mô hình ngôn ngữ n-gram.\n\n    Args:\n        n: Bậc của mô hình, chỉ nhận 1, 2 hoặc 3.\n        smoothing: Bật add-one smoothing nếu là True.\n\n    Raises:\n        ValueError: Nếu n không phải 1, 2 hoặc 3.\n    \"\"\"\n```\n\n---\n\n# 4. Hàm `__build_vocabulary`\n\n```python\ndef __build_vocabulary(self, corpus):\n```\n\n## Chức năng\n\nXây dựng tập từ vựng từ toàn bộ corpus.\n\n## Cách hoạt động\n\n```python\nself.vocabulary = {\n    word\n    for sentence in corpus\n    for word in sentence\n}\n```\n\nĐây là set comprehension tương đương với:\n\n```python\nself.vocabulary = set()\n\nfor sentence in corpus:\n    for word in sentence:\n        self.vocabulary.add(word)\n```\n\nVí dụ:\n\n```python\ncorpus = [\n    [\"tôi\", \"học\", \"NLP\"],\n    [\"tôi\", \"yêu\", \"NLP\"]\n]\n```\n\nKết quả:\n\n```python\nself.vocabulary = {\"tôi\", \"học\", \"yêu\", \"NLP\"}\n```\n\n## Ghi chú đề xuất\n\n```python\ndef __build_vocabulary(self, corpus):\n    \"\"\"\n    Xây dựng tập các token duy nhất xuất hiện trong corpus.\n\n    Args:\n        corpus: Danh sách các câu; mỗi câu là danh sách token.\n\n    Side Effects:\n        Cập nhật self.vocabulary.\n    \"\"\"\n```\n\n## Lưu ý\n\nTên hàm bắt đầu bằng hai dấu gạch dưới:\n\n```python\n__build_vocabulary\n```\n\nPython sẽ áp dụng name mangling. Hàm này thực tế được đổi tên nội bộ tương tự:\n\n```python\n_NGramLanguageModel__build_vocabulary\n```\n\nMục đích là hạn chế việc gọi trực tiếp từ bên ngoài lớp.\n\n---\n\n# 5. Hàm `__count_ngrams`\n\n```python\ndef __count_ngrams(self, corpus):\n```\n\nĐây là hàm quan trọng nhất trong giai đoạn huấn luyện.\n\n## Chức năng\n\nHàm này:\n\n1. Đếm tổng số token.\n2. Tạo các n-gram.\n3. Đếm số lần xuất hiện của từng n-gram.\n4. Đếm số lần xuất hiện của từng context.\n\n---\n\n## Cập nhật tổng số token\n\n```python\nfor sentence in corpus:\n    self.total_tokens += len(sentence)\n```\n\nVí dụ:\n\n```python\n[\"tôi\", \"học\", \"NLP\"]\n```\n\ncó 3 token, nên:\n\n```python\nself.total_tokens += 3\n```\n\n---\n\n## Duyệt qua các n-gram\n\n```python\nfor index in range(len(sentence) - self.n + 1):\n```\n\nCông thức số lượng n-gram trong một câu là:\n\n```text\nlen(sentence) - n + 1\n```\n\nVí dụ câu có 4 token:\n\n```python\n[\"tôi\", \"đang\", \"học\", \"NLP\"]\n```\n\n### Unigram\n\n```text\n4 - 1 + 1 = 4\n```\n\nCó 4 unigram.\n\n### Bigram\n\n```text\n4 - 2 + 1 = 3\n```\n\nCác bigram:\n\n```python\n(\"tôi\", \"đang\")\n(\"đang\", \"học\")\n(\"học\", \"NLP\")\n```\n\n### Trigram\n\n```text\n4 - 3 + 1 = 2\n```\n\nCác trigram:\n\n```python\n(\"tôi\", \"đang\", \"học\")\n(\"đang\", \"học\", \"NLP\")\n```\n\n---\n\n## Tạo n-gram\n\n```python\nngram = tuple(sentence[index:index + self.n])\n```\n\nVí dụ với bigram tại `index = 1`:\n\n```python\nsentence = [\"tôi\", \"đang\", \"học\", \"NLP\"]\n```\n\nKết quả:\n\n```python\nngram = (\"đang\", \"học\")\n```\n\n---\n\n## Trường hợp unigram\n\n```python\nif self.n == 1:\n    ngram = ngram[0]\n    context = None\n```\n\nUnigram chỉ có một từ nên được chuyển từ tuple:\n\n```python\n(\"học\",)\n```\n\nthành chuỗi:\n\n```python\n\"học\"\n```\n\nContext của unigram được quy ước là:\n\n```python\nNone\n```\n\nSau đó cập nhật:\n\n```python\nself.ngram_counts[ngram] += 1\nself.context_counts[context] += 1\n```\n\nVí dụ:\n\n```python\nself.ngram_counts[\"học\"] += 1\nself.context_counts[None] += 1\n```\n\n---\n\n## Trường hợp bigram và trigram\n\n```python\nelse:\n    context = ngram[:-1]\n```\n\n### Bigram\n\n```python\nngram = (\"tôi\", \"học\")\ncontext = (\"tôi\",)\n```\n\n### Trigram\n\n```python\nngram = (\"tôi\", \"đang\", \"học\")\ncontext = (\"tôi\", \"đang\")\n```\n\nSau đó đếm:\n\n```python\nself.ngram_counts[ngram] += 1\nself.context_counts[context] += 1\n```\n\n## Công thức xác suất tương ứng\n\nVới bigram:\n\n```text\nP(học | tôi) = Count(\"tôi\", \"học\") / Count(\"tôi\")\n```\n\nVới trigram:\n\n```text\nP(học | tôi, đang)\n= Count(\"tôi\", \"đang\", \"học\")\n  / Count(\"tôi\", \"đang\")\n```\n\n## Ghi chú đề xuất\n\n```python\ndef __count_ngrams(self, corpus):\n    \"\"\"\n    Đếm n-gram và context xuất hiện trong corpus.\n\n    Với unigram:\n        - ngram là một token.\n        - context được biểu diễn bằng None.\n\n    Với bigram hoặc trigram:\n        - ngram là tuple gồm n token.\n        - context là n - 1 token đầu tiên.\n\n    Args:\n        corpus: Danh sách các câu đã được tách thành token.\n\n    Side Effects:\n        Cập nhật:\n        - self.total_tokens\n        - self.ngram_counts\n        - self.context_counts\n    \"\"\"\n```\n\n---\n\n# 6. Các hàm `__train_unigram`, `__train_bigram`, `__train_trigram`\n\n```python\ndef __train_unigram(self):\n    self.model_type = \"unigram\"\n```\n\n```python\ndef __train_bigram(self):\n    self.model_type = \"bigram\"\n```\n\n```python\ndef __train_trigram(self):\n    self.model_type = \"trigram\"\n```\n\n## Chức năng\n\nCác hàm này chỉ gán nhãn loại mô hình.\n\nChúng chưa thực hiện thêm thuật toán huấn luyện nào. Việc đếm n-gram đã được thực hiện trong:\n\n```python\n__count_ngrams\n```\n\n## Vì sao vẫn tách thành ba hàm?\n\nCách viết này có thể nhằm:\n\n- Làm rõ ba loại mô hình.\n- Dễ mở rộng sau này.\n- Cho phép mỗi loại mô hình có logic riêng nếu cần.\n\nHiện tại, ba hàm có hành vi gần như giống nhau.\n\n## Ghi chú đề xuất\n\n```python\ndef __train_unigram(self):\n    \"\"\"\n    Đánh dấu mô hình hiện tại là unigram.\n\n    Việc đếm dữ liệu đã được thực hiện bởi __count_ngrams().\n    \"\"\"\n```\n\nTương tự với bigram và trigram:\n\n```python\ndef __train_bigram(self):\n    \"\"\"\n    Đánh dấu mô hình hiện tại là bigram.\n    \"\"\"\n```\n\n```python\ndef __train_trigram(self):\n    \"\"\"\n    Đánh dấu mô hình hiện tại là trigram.\n    \"\"\"\n```\n\n---\n\n# 7. Hàm `fit`\n\n```python\ndef fit(self, corpus):\n```\n\n## Chức năng\n\nHuấn luyện mô hình trên corpus.\n\n## Luồng xử lý\n\n```python\nself.__build_vocabulary(corpus)\n```\n\nBước 1: Xây dựng vocabulary.\n\n```python\nself.__count_ngrams(corpus)\n```\n\nBước 2: Đếm n-gram và context.\n\n```python\nif self.n == 1:\n    self.__train_unigram()\nelif self.n == 2:\n    self.__train_bigram()\nelse:\n    self.__train_trigram()\n```\n\nBước 3: Gán loại mô hình.\n\n```python\nreturn self\n```\n\nTrả về chính đối tượng hiện tại, cho phép viết:\n\n```python\nmodel = NGramLanguageModel(2).fit(corpus)\n```\n\n## Ghi chú đề xuất\n\n```python\ndef fit(self, corpus):\n    \"\"\"\n    Huấn luyện mô hình trên corpus.\n\n    Args:\n        corpus: Danh sách các câu, trong đó mỗi câu là danh sách token.\n\n    Returns:\n        Chính đối tượng mô hình sau khi huấn luyện.\n    \"\"\"\n```\n\n## Lưu ý quan trọng\n\nHiện tại nếu gọi `fit()` nhiều lần trên cùng một object, các bộ đếm sẽ bị cộng dồn:\n\n```python\nmodel.fit(corpus)\nmodel.fit(corpus)\n```\n\nTrong lần thứ hai:\n\n- `vocabulary` được tạo lại.\n- Nhưng `ngram_counts` không được xóa.\n- `context_counts` không được xóa.\n- `total_tokens` không được đặt lại.\n\nNếu muốn `fit()` hoạt động giống các thư viện machine learning thông thường, nên reset trước khi đếm:\n\n```python\nself.ngram_counts.clear()\nself.context_counts.clear()\nself.total_tokens = 0\n```\n\n---\n\n# 8. Hàm `probability`\n\n```python\ndef probability(self, context, word):\n```\n\n## Chức năng\n\nTính xác suất xuất hiện của `word` dựa trên `context`.\n\n---\n\n## Trường hợp unigram\n\n```python\nif self.n == 1:\n    ngram = word\n    context_key = None\n```\n\nVới unigram:\n\n```text\nP(word) = Count(word) / Tổng số token\n```\n\nTrong code, `context_counts[None]` chính là tổng số token, vì mỗi token đều làm tăng bộ đếm `None`.\n\nVí dụ:\n\n```python\nP(\"học\") = Count(\"học\") / Count(None)\n```\n\n---\n\n## Trường hợp bigram/trigram\n\n```python\nelse:\n    context = tuple(context[-(self.n - 1):])\n    ngram = context + (word,)\n    context_key = context\n```\n\nDòng này chỉ lấy số token context gần nhất cần thiết.\n\n### Với bigram\n\n```python\nn = 2\ncontext = [\"tôi\", \"đang\"]\n```\n\nChỉ lấy một token cuối:\n\n```python\ncontext = (\"đang\",)\n```\n\nSau đó:\n\n```python\nngram = (\"đang\", \"học\")\n```\n\n### Với trigram\n\n```python\nn = 3\ncontext = [\"tôi\", \"đang\"]\n```\n\nLấy hai token cuối:\n\n```python\ncontext = (\"tôi\", \"đang\")\n```\n\nSau đó:\n\n```python\nngram = (\"tôi\", \"đang\", \"học\")\n```\n\n---\n\n## Lấy số lần xuất hiện\n\n```python\nngram_count = self.ngram_counts[ngram]\ncontext_count = self.context_counts[context_key]\n```\n\nVí dụ:\n\n```python\nngram_count = Count((\"tôi\", \"học\"))\ncontext_count = Count((\"tôi\",))\n```\n\nDo sử dụng `Counter`, nếu n-gram chưa từng xuất hiện thì giá trị nhận được là `0`.\n\n---\n\n## Trường hợp smoothing\n\n```python\nif self.smoothing:\n    vocabulary_size = len(self.vocabulary)\n    return (ngram_count + 1) / (context_count + vocabulary_size)\n```\n\nĐây là add-one smoothing:\n\n```text\nP(word | context)\n=\n(Count(context, word) + 1)\n/\n(Count(context) + |Vocabulary|)\n```\n\nViệc cộng `1` giúp n-gram chưa từng xuất hiện vẫn có xác suất khác `0`.\n\nVí dụ:\n\n```text\nngram_count = 0\ncontext_count = 4\nvocabulary_size = 10\n```\n\nKhi đó:\n\n```text\nP = (0 + 1) / (4 + 10)\n  = 1 / 14\n```\n\n---\n\n## Trường hợp không smoothing\n\n```python\nif context_count == 0:\n    return 0.0\n```\n\nNếu context chưa từng xuất hiện, xác suất được trả về là `0`.\n\nNếu context có tồn tại:\n\n```python\nreturn ngram_count / context_count\n```\n\nĐây là maximum likelihood estimation:\n\n```text\nP(word | context)\n=\nCount(context, word) / Count(context)\n```\n\n## Ghi chú đề xuất\n\n```python\ndef probability(self, context, word):\n    \"\"\"\n    Tính xác suất của một token dựa trên context.\n\n    Args:\n        context: Danh sách hoặc tuple các token trước đó.\n        word: Token cần tính xác suất.\n\n    Returns:\n        Xác suất của word trong context.\n        Nếu không bật smoothing và context chưa xuất hiện,\n        kết quả là 0.0.\n    \"\"\"\n```\n\n## Lưu ý\n\nHàm này giả định mô hình đã được `fit()` trước đó. Nếu gọi ngay sau khi khởi tạo:\n\n```python\nmodel = NGramLanguageModel(2)\nmodel.probability([\"tôi\"], \"học\")\n```\n\nkết quả thường sẽ là `0.0`, hoặc với smoothing có thể gây kết quả không có ý nghĩa vì vocabulary rỗng.\n\n---\n\n# 9. Hàm `sentence_probability`\n\n```python\ndef sentence_probability(self, sentence):\n```\n\n## Chức năng\n\nTính xác suất của toàn bộ câu bằng cách nhân xác suất của từng token.\n\nCông thức:\n\n```text\nP(w1, w2, ..., wk)\n=\nP(w1)\n× P(w2 | w1)\n× ...\n× P(wk | context)\n```\n\n## Khởi tạo\n\n```python\nprobability = 1.0\n```\n\nPhép nhân cần bắt đầu từ `1`.\n\n---\n\n## Duyệt từng từ\n\n```python\nfor index, word in enumerate(sentence):\n```\n\nMỗi token được tính xác suất dựa trên các token trước nó.\n\n---\n\n## Context cho unigram\n\n```python\nif self.n == 1:\n    context = []\n```\n\nUnigram không sử dụng context.\n\n---\n\n## Context cho bigram/trigram\n\n```python\nelse:\n    context = sentence[\n        max(0, index - self.n + 1):index\n    ]\n```\n\n### Ví dụ với trigram\n\nCâu:\n\n```python\n[\"tôi\", \"đang\", \"học\", \"NLP\"]\n```\n\nKhi tính xác suất cho:\n\n```python\n\"học\"\n```\n\nvới `index = 2`:\n\n```python\ncontext = sentence[0:2]\ncontext = [\"tôi\", \"đang\"]\n```\n\nKhi tính xác suất cho:\n\n```python\n\"NLP\"\n```\n\nvới `index = 3`:\n\n```python\ncontext = sentence[1:3]\ncontext = [\"đang\", \"học\"]\n```\n\n---\n\n## Nhân xác suất\n\n```python\nprobability *= self.probability(context, word)\n```\n\nNếu một token có xác suất bằng `0`, toàn bộ xác suất câu cũng bằng `0`.\n\n## Ghi chú đề xuất\n\n```python\ndef sentence_probability(self, sentence):\n    \"\"\"\n    Tính xác suất của toàn bộ câu bằng tích xác suất\n    có điều kiện của từng token.\n\n    Args:\n        sentence: Danh sách token trong câu.\n\n    Returns:\n        Xác suất của câu.\n    \"\"\"\n```\n\n## Lưu ý về đầu câu\n\nCode không thêm token bắt đầu câu như:\n\n```text\n< बोS >\n```\n\nhoặc:\n\n```text\n<BOS>\n```\n\nVì vậy, các từ đầu câu có context ngắn hơn bình thường.\n\nVí dụ với trigram:\n\n- Từ đầu tiên: context rỗng\n- Từ thứ hai: context có một từ\n- Từ thứ ba trở đi: context có hai từ\n\nĐây là cách xử lý hợp lệ, nhưng nếu muốn mô hình hóa biên câu chính xác hơn, có thể thêm token `<BOS>` khi chuẩn bị corpus.\n\n---\n\n# 10. Hàm `sentence_log_probability`\n\n```python\ndef sentence_log_probability(self, sentence):\n```\n\n## Chức năng\n\nTính log-probability của câu.\n\nThay vì tính:\n\n```text\nP1 × P2 × P3 × ...\n```\n\nhàm tính:\n\n```text\nlog(P1) + log(P2) + log(P3) + ...\n```\n\nDo tính chất:\n\n```text\nlog(a × b) = log(a) + log(b)\n```\n\n## Vì sao cần log-probability?\n\nXác suất của câu dài thường rất nhỏ. Ví dụ:\n\n```text\n0.1 × 0.2 × 0.01 × 0.05\n```\n\nKhi câu dài, kết quả có thể bị underflow về gần `0`.\n\nDùng log giúp:\n\n- Tránh tích nhiều số nhỏ.\n- Dễ so sánh các câu.\n- Phù hợp với việc tính perplexity.\n- Tính toán ổn định hơn.\n\n## Khởi tạo\n\n```python\nlog_probability = 0.0\n```\n\n---\n\n## Tính xác suất từng từ\n\nLogic lấy context giống với `sentence_probability`.\n\n```python\nprobability = self.probability(context, word)\n```\n\n---\n\n## Xử lý xác suất bằng 0\n\n```python\nif probability == 0:\n    return float(\"-inf\")\n```\n\nVì:\n\n```text\nlog(0) = -∞\n```\n\nNếu một token có xác suất bằng `0`, log-probability của toàn bộ câu là âm vô cùng.\n\n## Cộng log xác suất\n\n```python\nlog_probability += math.log(probability)\n```\n\n## Ghi chú đề xuất\n\n```python\ndef sentence_log_probability(self, sentence):\n    \"\"\"\n    Tính log-probability của một câu.\n\n    Việc sử dụng log giúp tránh underflow khi câu dài\n    hoặc khi xác suất của từng token rất nhỏ.\n\n    Args:\n        sentence: Danh sách token trong câu.\n\n    Returns:\n        Tổng log xác suất của câu.\n        Trả về -inf nếu có token có xác suất bằng 0.\n    \"\"\"\n```\n\n## Quan hệ với `sentence_probability`\n\nVề mặt lý thuyết:\n\n```python\nmodel.sentence_log_probability(sentence)\n```\n\ntương đương với:\n\n```python\nmath.log(model.sentence_probability(sentence))\n```\n\nTuy nhiên, cách cài đặt hiện tại tốt hơn cho câu dài vì không cần tính tích xác suất trước.\n\n---\n\n# 11. Hàm `next_word_distribution`\n\n```python\ndef next_word_distribution(self, context):\n```\n\n## Chức năng\n\nTính xác suất của mọi từ trong vocabulary khi đặt sau context.\n\n## Cách hoạt động\n\n```python\ndistribution = {}\n```\n\nTạo dictionary kết quả.\n\n```python\nfor word in self.vocabulary:\n    distribution[word] = self.probability(context, word)\n```\n\nVới mỗi từ trong vocabulary, hàm gọi:\n\n```python\nself.probability(context, word)\n```\n\nVí dụ:\n\n```python\ncontext = [\"tôi\"]\n```\n\nKết quả có thể là:\n\n```python\n{\n    \"học\": 0.6,\n    \"yêu\": 0.3,\n    \"NLP\": 0.1\n}\n```\n\nDictionary này có thể dùng để:\n\n- Chọn từ có xác suất cao nhất.\n- Sinh văn bản.\n- So sánh các ứng viên.\n- Vẽ biểu đồ phân phối.\n\n## Ghi chú đề xuất\n\n```python\ndef next_word_distribution(self, context):\n    \"\"\"\n    Tính phân phối xác suất của từ tiếp theo.\n\n    Args:\n        context: Các token gần nhất trước vị trí cần dự đoán.\n\n    Returns:\n        Dictionary ánh xạ mỗi token trong vocabulary\n        tới xác suất xuất hiện sau context.\n    \"\"\"\n```\n\n## Lưu ý\n\nNếu không smoothing và context chưa từng xuất hiện, tất cả xác suất có thể bằng `0`.\n\nNếu có smoothing, tổng các xác suất thường bằng `1` đối với context hợp lệ. Ví dụ:\n\n```python\ndistribution = model.next_word_distribution([\"tôi\"])\nsum(distribution.values())\n```\n\ncó thể gần bằng:\n\n```python\n1.0\n```\n\n---\n\n# 12. Ví dụ chạy hoàn chỉnh\n\n```python\nfrom src.ngram_lm import NGramLanguageModel\n\ncorpus = [\n    [\"tôi\", \"học\", \"NLP\"],\n    [\"tôi\", \"yêu\", \"NLP\"],\n    [\"bạn\", \"học\", \"NLP\"],\n]\n\nmodel = NGramLanguageModel(\n    n=2,\n    smoothing=True\n)\n\nmodel.fit(corpus)\n\nprint(model.vocabulary)\nprint(model.ngram_counts)\nprint(model.context_counts)\n\nprint(model.probability([\"tôi\"], \"học\"))\n\nprint(model.sentence_probability([\"tôi\", \"học\", \"NLP\"]))\n\nprint(model.sentence_log_probability([\"tôi\", \"học\", \"NLP\"]))\n\nprint(model.next_word_distribution([\"tôi\"]))\n```\n\n---\n\n# 13. Luồng hoạt động tổng thể\n\n```text\nKhởi tạo mô hình\n        |\n        v\n        fit(corpus)\n        |\n        +-- Xây dựng vocabulary\n        |\n        +-- Đếm n-gram\n        |\n        +-- Đếm context\n        |\n        +-- Gán model_type\n        |\n        v\nGọi probability()\n        |\n        +-- Tạo n-gram cần kiểm tra\n        +-- Lấy số lần xuất hiện\n        +-- Áp dụng smoothing nếu cần\n        +-- Trả về xác suất\n        |\n        v\nsentence_probability()\nhoặc sentence_log_probability()\n```\n\n---\n\n# 14. Cách ghi chú nên dùng\n\nNên ưu tiên **docstring** ngay bên dưới phần khai báo hàm thay vì chỉ ghi comment phía trên.\n\nVí dụ chưa tốt:\n\n```python\n# Hàm tính xác suất\ndef probability(self, context, word):\n```\n\nVí dụ tốt hơn:\n\n```python\ndef probability(self, context, word):\n    \"\"\"\n    Tính xác suất của word dựa trên context.\n\n    Args:\n        context: Các token đứng trước word.\n        word: Token cần tính xác suất.\n\n    Returns:\n        Xác suất của word.\n    \"\"\"\n```\n\n## Cấu trúc ghi chú đề xuất\n\nMỗi hàm nên ghi đủ:\n\n1. Hàm dùng để làm gì.\n2. Ý nghĩa của từng tham số.\n3. Giá trị trả về.\n4. Ngoại lệ nếu có.\n5. Side effect nếu hàm cập nhật thuộc tính của object.\n6. Công thức nếu hàm liên quan đến toán học.\n\n---\n\n# 15. Gợi ý bộ docstring hoàn chỉnh\n\nCó thể ghi chú các hàm trong file theo mẫu sau:\n\n```python\nclass NGramLanguageModel:\n    \"\"\"Mô hình ngôn ngữ unigram, bigram hoặc trigram.\"\"\"\n\n    def __init__(self, n, smoothing=False):\n        \"\"\"\n        Khởi tạo mô hình n-gram.\n\n        Args:\n            n: Bậc của mô hình, chỉ nhận 1, 2 hoặc 3.\n            smoothing: Bật add-one smoothing nếu là True.\n\n        Raises:\n            ValueError: Nếu n không hợp lệ.\n        \"\"\"\n\n    def __build_vocabulary(self, corpus):\n        \"\"\"\n        Xây dựng tập token duy nhất từ corpus.\n\n        Args:\n            corpus: Danh sách các câu đã được token hóa.\n\n        Side Effects:\n            Cập nhật self.vocabulary.\n        \"\"\"\n\n    def __count_ngrams(self, corpus):\n        \"\"\"\n        Đếm n-gram, context và tổng số token trong corpus.\n\n        Args:\n            corpus: Danh sách các câu đã được token hóa.\n\n        Side Effects:\n            Cập nhật self.total_tokens,\n            self.ngram_counts và self.context_counts.\n        \"\"\"\n\n    def __train_unigram(self):\n        \"\"\"Đánh dấu mô hình là unigram.\"\"\"\n\n    def __train_bigram(self):\n        \"\"\"Đánh dấu mô hình là bigram.\"\"\"\n\n    def __train_trigram(self):\n        \"\"\"Đánh dấu mô hình là trigram.\"\"\"\n\n    def fit(self, corpus):\n        \"\"\"\n        Huấn luyện mô hình trên corpus.\n\n        Args:\n            corpus: Danh sách các câu đã được token hóa.\n\n        Returns:\n            Chính đối tượng mô hình sau khi huấn luyện.\n        \"\"\"\n\n    def probability(self, context, word):\n        \"\"\"\n        Tính xác suất của word dựa trên context.\n\n        Args:\n            context: Các token đứng trước word.\n            word: Token cần tính xác suất.\n\n        Returns:\n            Xác suất có điều kiện của word.\n        \"\"\"\n\n    def sentence_probability(self, sentence):\n        \"\"\"\n        Tính xác suất của toàn bộ câu.\n\n        Args:\n            sentence: Danh sách token trong câu.\n\n        Returns:\n            Xác suất của câu.\n        \"\"\"\n\n    def sentence_log_probability(self, sentence):\n        \"\"\"\n        Tính log-probability của toàn bộ câu.\n\n        Args:\n            sentence: Danh sách token trong câu.\n\n        Returns:\n            Log-probability của câu, hoặc -inf nếu\n            một token có xác suất bằng 0.\n        \"\"\"\n\n    def next_word_distribution(self, context):\n        \"\"\"\n        Tính xác suất của mọi từ trong vocabulary\n        khi đặt sau context.\n\n        Args:\n            context: Các token gần nhất trước vị trí dự đoán.\n\n        Returns:\n            Dictionary ánh xạ token tới xác suất.\n        \"\"\"\n```\n\n---\n\n# 16. Một số hạn chế hiện tại cần ghi chú\n\n## `fit()` không reset bộ đếm\n\nNếu huấn luyện lại cùng object, bộ đếm bị cộng dồn. Nên reset:\n\n```python\nself.ngram_counts.clear()\nself.context_counts.clear()\nself.total_tokens = 0\n```\n\ntrước khi gọi `__count_ngrams()`.\n\n## Không kiểm tra corpus đầu vào\n\nCode chưa kiểm tra:\n\n- Corpus có rỗng hay không.\n- Câu có phải list token hay không.\n- Token có phải string hay không.\n- `fit()` đã được gọi trước khi tính xác suất hay chưa.\n\n## Chưa có token ngoài từ vựng `<UNK>`\n\nMột từ xuất hiện trong câu kiểm tra nhưng không có trong vocabulary sẽ có xác suất bằng `0` nếu không dùng smoothing. Trong mô hình thực tế, thường cần ánh xạ từ hiếm hoặc từ lạ thành:\n\n```text\n<UNK>\n```\n\n## Không có token biên câu\n\nMô hình chưa dùng:\n\n```text\n<BOS>\n<EOS>\n```\n\nDo đó việc tính xác suất cho các từ đầu và cuối câu chưa phản ánh đầy đủ ranh giới câu.\n\n## Các hàm train hiện mới chỉ gán nhãn\n\n`__train_unigram`, `__train_bigram` và `__train_trigram` chưa thực hiện thuật toán riêng. Tên hàm vẫn hợp lý cho cấu trúc hiện tại, nhưng có thể gộp lại nếu không có kế hoạch mở rộng.\n\n**Tóm lại:** phần cốt lõi của file là `__count_ngrams()`, `probability()`, `sentence_probability()` và `sentence_log_probability()`. Các hàm còn lại chủ yếu đảm nhiệm khởi tạo, chuẩn bị dữ liệu, gán loại mô hình và tạo phân phối dự đoán.",
+          "isTrusted": false,
+          "supportThemeIcons": false,
+          "supportHtml": false,
+          "supportAlertSyntax": false
+        }
+      ],
+      "agent": {
+        "id": "agent-host-copilotcli",
+        "name": "agent-host-copilotcli",
+        "fullName": "Copilot",
+        "description": "Copilot SDK agent running in the local agent host process",
+        "extensionId": {
+          "value": "vscode.agent-host",
+          "_lower": "vscode.agent-host"
+        },
+        "extensionPublisherId": "vscode",
+        "extensionDisplayName": "Agent Host",
+        "isDefault": false,
+        "isDynamic": true,
+        "isCore": true,
+        "metadata": {
+          "themeIcon": {
+            "id": "copilot"
+          }
+        },
+        "slashCommands": [],
+        "locations": [
+          "panel"
+        ],
+        "modes": [
+          "agent"
+        ],
+        "disambiguation": []
+      },
+      "timestamp": 1790638169494,
+      "modelId": "agent-host-copilotcli:auto",
+      "responseId": "response_cac09bf9-55bd-4e51-a67f-06eb08e2caf4",
+      "result": {
+        "details": "Auto (gpt-5.6-luna) • 1.5 credits"
+      },
+      "responseMarkdownInfo": [],
+      "modelState": {
+        "value": 1,
+        "completedAt": 1790638250699
+      },
+      "contentReferences": [],
+      "codeCitations": [],
+      "responseTimestamp": 1790639211548,
+      "timeSpentWaiting": 0,
+      "promptTokens": 22218,
+      "completionTokens": 7805,
+      "copilotCredits": 1.4944365,
+      "modelTotals": [
+        {
+          "model": "gpt-5.6-luna",
+          "inputTokens": 106335,
+          "cachedTokens": 84105,
+          "outputTokens": 7805
+        }
+      ],
+      "sessionCopilotCredits": 0.6628167,
+      "elapsedMs": 81205
+    }
+  ]
+}
