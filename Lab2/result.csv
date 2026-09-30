@@ -1,0 +1,15 @@
+﻿Section,Model,Unique n-grams,Singleton n-grams,Train PPL,Validation PPL,Test PPL,Test - Train PPL,Context,Predictions,Predicted next word,Actual next word,Correct,Rank,Candidate,Log-probability
+Experiment 1,Unigram,227775.0,118823.0,,,,,,,,,,,,
+Experiment 1,Bigram,2798004.0,2023094.0,,,,,,,,,,,,
+Experiment 1,Trigram,6382988.0,5525227.0,,,,,,,,,,,,
+Experiment 3,Unigram,96506.0,0.0,1876.621144015727,1773.0267289717206,1760.1535913807709,-116.46755263495606,,,,,,,,
+Experiment 3,Bigram,2233900.0,1578117.0,4814.09241344035,5592.437242115439,5554.068561395342,739.9761479549916,,,,,,,,
+Experiment 3,Trigram,5195243.0,4507085.0,27810.178419471315,41997.92475083423,41827.42898192585,14017.250562454534,,,,,,,,
+,,,,,,,,part of,"the (0.0144), a (0.0030), your (0.0014), our (0.0013), this (0.0012)",the,a,False,,,
+,,,,,,,,of a,"<UNK> (0.0016), new (0.0014), person (0.0005), kind (0.0005), large (0.0004)",<UNK>,traditional,False,,,
+,,,,,,,,a traditional,"<UNK> (0.0001), ira (0.0001), in-ground (0.0000), office (0.0000), high (0.0000)",<UNK>,range,False,,,
+,,,,,,,,traditional range,"propose (0.0000), reel (0.0000), 16 (0.0000), recognize (0.0000), impassable (0.0000)",propose,that,False,,,
+,,,,,,,,range that,"have (0.0000), expands (0.0000), allow (0.0000), won (0.0000), conair (0.0000)",have,works,False,,,
+Application - Ranking,,,,,,,,part of,,,,,1.0,a traditional range,-26.015090661611282
+Application - Ranking,,,,,,,,part of,,,,,2.0,club are seeking,-34.46513625825463
+Application - Ranking,,,,,,,,part of,,,,,3.0,sources that moore,-34.46542636130096
