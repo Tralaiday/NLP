@@ -3,13 +3,14 @@ import numpy as np
 class CoOccurrenceModel:
 
     def __init__(self):
-        self.vocabulary = set()
-        self.document_tokenized_list = []
-        self.vocab_size = 0
-        self.matrix = None
+        self.vocabulary = set()             # Tập các từ vựng
+        self.document_tokenized_list = []   # Danh sách token theo document
+        self.vocab_size = 0                 # Tổng số từ vựng trong corpus
+        self.matrix = None                  # Co-occurence matrix
 
-        self.word_to_index = dict()
+        self.word_to_index = dict()         # Dict đánh thứ tự word trong document
 
+    # Hàm dùng để fit model từ corpus(xây tập từ vựng và co-occurence matrix)
     def fit(self, corpus, k: int):
         if k <= 0:
             raise ValueError("k phải là số nguyên dương")
@@ -23,6 +24,7 @@ class CoOccurrenceModel:
 
         return self
 
+    # Hàm xây tập từ vựng
     def __build_vocabulary(self, corpus):
         for document in corpus:
             term_list = document.strip('.!?\n').lower().replace(',', ' ').split()
@@ -35,6 +37,7 @@ class CoOccurrenceModel:
         })
         self.vocab_size = len(self.vocabulary)
 
+    # Hàm xây co-occurence matrix
     def __build_cooccurence_matrix(self, k: int):
         self.word_to_index = {
             word: index
@@ -63,6 +66,7 @@ class CoOccurrenceModel:
                         self.word_to_index[context_word]
                     ] += 1
 
+    # Hàm tính cosine similarity
     def __cosine_similarity(self, vector1, vector2):
         vector1 = np.array(vector1)
         vector2 = np.array(vector2)
@@ -77,6 +81,7 @@ class CoOccurrenceModel:
         
         return dot_product / (vec1_norm * vec2_norm)
 
+    # Hàm tìm ra top-k từ có similar cao nhất với target_word
     def most_similar(self, target_word: str, top_k: int):
         if top_k <= 0:
             raise ValueError('top_k phải là số nguyên dương')
@@ -103,6 +108,7 @@ class CoOccurrenceModel:
             reverse = True
         )[:top_k]
 
+# Phần test chương trình trên
 if __name__ == '__main__':
     raw_corpus = [
         'the cat eats fish.',
