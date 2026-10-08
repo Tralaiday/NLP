@@ -2,7 +2,7 @@ Query: `soccer game`
 
 # Ba similarity đúng
 
-## Document 1915: 
+## Document 1915 
 Observed: Document được xếp ở rank 4 về similarity với query, đề cập đến quảng cáo trận đấu bóng đá.
 
 Expected: Document đề cập đến trận đấu bóng đá.
@@ -14,7 +14,7 @@ Evidence from corpus: Document chứa các từ như football, game, championshi
 Possible explanation:
 Similarity cao vì document có các từ liên quan đến trận đấu bóng đá.
 
-## Document 16031:
+## Document 16031
 Observed: Document được xếp ở rank 5 về similarity với query, đề cập đến quảng cáo game về bóng đá.
 
 Expected: Document đề cập đến trận đấu bóng đá.
