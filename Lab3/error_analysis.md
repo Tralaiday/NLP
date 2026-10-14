@@ -2,7 +2,11 @@ Query: `soccer game`
 
 # Ba similarity đúng
 
+<<<<<<< HEAD
 ## Document 1915
+=======
+## Document 1915 
+>>>>>>> 0c6f691cb29674840de83eadfeb31afb40d19f7e
 Observed: Document được xếp ở rank 4 về similarity với query, đề cập đến quảng cáo trận đấu bóng đá.
 
 Expected: Document đề cập đến trận đấu bóng đá.
