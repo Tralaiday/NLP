@@ -12,11 +12,12 @@ def scaled_dot_product_attention(
 
 
 def __softmax(S: np.ndarray):
-    results = [(np.exp(s) / np.sum(np.exp(S))) for s in S]
+    max_s = np.max(S)
+    results = [(np.exp(s - max_s) / np.sum(np.exp(S - max_s))) for s in S]
     return np.array(results)
 
 if __name__ == '__main__':
-    Q = np.array([[1, 0]])
+    Q = np.array([1, 0])
     K = np.array([[1, 0], [0, 1], [1, 1]])
     V = np.array([[1, 0], [0, 1], [2, 2]])
     print(Q.shape, K.shape, V.shape)
