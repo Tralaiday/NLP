@@ -8,7 +8,7 @@ def scaled_dot_product_attention(
     d_k = K.shape[1]
     S = np.dot(Q, K.T) / np.sqrt(d_k)
     A = __softmax(S)
-    return np.dot(A, V)
+    return S, np.dot(A, V)
 
 
 def __softmax(S: np.ndarray):
