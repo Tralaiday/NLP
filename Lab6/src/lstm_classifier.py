@@ -5,7 +5,7 @@ import torch.nn as nn
 from torch.nn.utils.rnn import pack_padded_sequence
 
 
-class RNNClassifier(nn.Module):
+class LSTMClassifier(nn.Module):
     def __init__(
         self,
         vocab_size,
@@ -21,7 +21,7 @@ class RNNClassifier(nn.Module):
             padding_idx=pad_id,
         )
 
-        self.rnn = nn.RNN(
+        self.lstm = nn.LSTM(
             input_size=embedding_dim,
             hidden_size=hidden_dim,
             batch_first=True,
@@ -40,9 +40,10 @@ class RNNClassifier(nn.Module):
             enforce_sorted=False,
         )
 
-        _, hidden = self.rnn(packed)
+        _, (hidden, cell) = self.lstm(packed)
 
         # hidden: (1, batch_size, hidden_dim)
+        # cell:   (1, batch_size, hidden_dim)
         context = hidden[-1]
 
         # context: (batch_size, hidden_dim)
