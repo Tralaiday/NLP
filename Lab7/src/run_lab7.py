@@ -1,304 +1,306 @@
-"""Runnable experiments for Lab 07.
+"""Run the experiments required by LAB 07.
 
-The module is intentionally self-contained so it can be run from Colab,
-Jupyter, or the repository root:
+Run from the repository root:
 
     python Lab7/src/run_lab7.py
 
-The IMDb CSV is discovered in Lab7/data, Lab5/data, or Lab4/data.  Training
-can be shortened with the ``LAB7_MAX_SAMPLES`` and ``LAB7_EPOCHS`` environment
-variables.
+For a quick test, set LAB7_MAX_SAMPLES and LAB7_EPOCHS.
 """
-
-from __future__ import annotations
 
 import csv
 import os
 import random
 import re
-import sys
 import time
 from pathlib import Path
-from typing import Iterable
 
 import torch
 from torch import nn
 from torch.utils.data import DataLoader, Dataset, random_split
 
-try:
-    from .transformer_classifier import TransformerClassifier
-    from .positional_encoding import PositionalEncoding
-    from .multi_head_self_attention import MultiHeadSelfAttention
-except ImportError:
-    from transformer_classifier import TransformerClassifier
-    from positional_encoding import PositionalEncoding
-    from multi_head_self_attention import MultiHeadSelfAttention
+from multi_head_self_attention import MultiHeadSelfAttention
+from positional_encoding import PositionalEncoding
+from transformer_classifier import TransformerClassifier
 
 
-ROOT = Path(__file__).resolve().parents[2]
-LAB7 = ROOT / "Lab7"
+ROOT = Path(__file__).resolve().parents[1]
+DATA_PATH = ROOT / "data" / "IMDB Dataset.csv"
 SEED = 42
 
 
-def seed_everything(seed: int = SEED) -> None:
-    random.seed(seed)
-    torch.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(seed)
+def set_seed():
+    random.seed(SEED)
+    torch.manual_seed(SEED)
 
 
-def find_dataset() -> Path:
-    candidates = [
-        LAB7 / "data" / "IMDB Dataset.csv",
-        ROOT / "Lab5" / "data" / "IMDB Dataset.csv",
-        ROOT / "Lab4" / "data" / "IMDB Dataset.csv",
-    ]
-    for path in candidates:
-        if path.exists():
-            return path
-    raise FileNotFoundError(
-        "Không tìm thấy IMDb Dataset.csv. Đặt file vào Lab7/data hoặc Lab4/data."
-    )
-
-
-def tokenize(text: str) -> list[str]:
+def words(text):
     return re.findall(r"[a-z0-9]+(?:'[a-z]+)?", text.lower())
 
 
-def read_imdb(path: Path, max_samples: int | None = None) -> list[tuple[list[str], int]]:
-    rows: list[tuple[list[str], int]] = []
-    with path.open(encoding="utf-8") as file:
+def read_data(limit):
+    if not DATA_PATH.exists():
+        raise FileNotFoundError(f"Không tìm thấy {DATA_PATH}")
+
+    data = []
+    with DATA_PATH.open(encoding="utf-8") as file:
         for row in csv.DictReader(file):
-            sentiment = row["sentiment"].strip().lower()
-            if sentiment not in {"positive", "negative"}:
-                continue
-            rows.append((tokenize(row["review"]), int(sentiment == "positive")))
-            if max_samples and len(rows) >= max_samples:
+            data.append((words(row["review"]), int(row["sentiment"] == "positive")))
+            if limit and len(data) == limit:
                 break
-    if not rows:
-        raise ValueError(f"Dataset rỗng hoặc sai định dạng: {path}")
-    return rows
+    return data
 
 
-def build_vocab(samples: Iterable[tuple[list[str], int]], min_freq: int = 2) -> dict[str, int]:
-    counts: dict[str, int] = {}
-    for tokens, _ in samples:
+def make_vocab(data, min_frequency=2):
+    counts = {}
+    for tokens, _ in data:
         for token in tokens:
             counts[token] = counts.get(token, 0) + 1
+
     vocab = {"<PAD>": 0, "<UNK>": 1}
-    for token in sorted(counts):
-        if counts[token] >= min_freq:
+    for token, count in sorted(counts.items()):
+        if count >= min_frequency:
             vocab[token] = len(vocab)
     return vocab
 
 
-class ReviewDataset(Dataset):
-    def __init__(
-        self,
-        samples: list[tuple[list[str], int]],
-        vocab: dict[str, int],
-        max_length: int,
-    ):
+class Reviews(Dataset):
+    def __init__(self, data, vocab, max_length):
         self.items = []
-        pad = vocab["<PAD>"]
-        unk = vocab["<UNK>"]
-        for tokens, label in samples:
-            ids = [vocab.get(token, unk) for token in tokens[:max_length]]
-            if not ids:
-                ids = [unk]
+        for tokens, label in data:
+            ids = [vocab.get(token, 1) for token in tokens[:max_length]]
+            ids = ids or [1]
             length = len(ids)
-            ids += [pad] * (max_length - length)
-            self.items.append(
-                (torch.tensor(ids), torch.tensor(length), torch.tensor(label))
-            )
+            ids += [0] * (max_length - length)
+            self.items.append((torch.tensor(ids), torch.tensor(label), length))
 
-    def __len__(self) -> int:
+    def __len__(self):
         return len(self.items)
 
-    def __getitem__(self, index: int):
+    def __getitem__(self, index):
         return self.items[index]
 
 
 class LSTMClassifier(nn.Module):
-    def __init__(self, vocab_size: int, d_model: int, hidden_dim: int, pad_idx: int):
+    def __init__(self, vocab_size, hidden_size=64):
         super().__init__()
-        self.embedding = nn.Embedding(vocab_size, d_model, padding_idx=pad_idx)
-        self.lstm = nn.LSTM(d_model, hidden_dim, batch_first=True)
-        self.classifier = nn.Linear(hidden_dim, 2)
+        self.embedding = nn.Embedding(vocab_size, hidden_size, padding_idx=0)
+        self.lstm = nn.LSTM(hidden_size, hidden_size, batch_first=True)
+        self.output = nn.Linear(hidden_size, 2)
 
-    def forward(self, input_ids: torch.Tensor, attention_mask: torch.Tensor | None = None):
-        lengths = attention_mask.sum(1).cpu() if attention_mask is not None else None
-        x = self.embedding(input_ids)
-        if lengths is not None:
-            packed = nn.utils.rnn.pack_padded_sequence(
-                x, lengths.clamp(min=1), batch_first=True, enforce_sorted=False
-            )
-            _, (hidden, _) = self.lstm(packed)
-        else:
-            _, (hidden, _) = self.lstm(x)
-        return self.classifier(hidden[-1])
+    def forward(self, input_ids, mask):
+        embedded = self.embedding(input_ids)
+        lengths = mask.sum(1).cpu().clamp(min=1)
+        packed = nn.utils.rnn.pack_padded_sequence(
+            embedded, lengths, batch_first=True, enforce_sorted=False
+        )
+        _, (hidden, _) = self.lstm(packed)
+        return self.output(hidden[-1])
 
 
-def evaluate(model: nn.Module, loader: DataLoader, device: torch.device) -> dict[str, float]:
-    model.eval()
-    correct = total = tp = fp = fn = 0
-    with torch.no_grad():
-        for ids, lengths, labels in loader:
-            ids, labels = ids.to(device), labels.to(device)
-            mask = ids != 0
-            predictions = model(ids, mask).argmax(1)
-            correct += int((predictions == labels).sum())
-            total += labels.numel()
-            tp += int(((predictions == 1) & (labels == 1)).sum())
-            fp += int(((predictions == 1) & (labels == 0)).sum())
-            fn += int(((predictions == 0) & (labels == 1)).sum())
-    precision = tp / max(tp + fp, 1)
-    recall = tp / max(tp + fn, 1)
-    f1 = 2 * precision * recall / max(precision + recall, 1e-12)
-    return {"accuracy": correct / max(total, 1), "precision": precision, "recall": recall, "f1": f1}
+def make_mask(input_ids):
+    return input_ids != 0
 
 
-def train(
-    model: nn.Module,
-    train_loader: DataLoader,
-    valid_loader: DataLoader,
-    device: torch.device,
-    epochs: int,
-) -> tuple[dict[str, list[float]], float]:
-    optimizer = torch.optim.AdamW(model.parameters(), lr=2e-3)
-    criterion = nn.CrossEntropyLoss()
+def train(model, loader, valid_loader, device, epochs):
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.002)
+    loss_function = nn.CrossEntropyLoss()
     history = {"train_loss": [], "valid_loss": []}
-    started = time.perf_counter()
+    start = time.time()
+
     for _ in range(epochs):
         model.train()
-        train_total = 0.0
-        for ids, _, labels in train_loader:
-            ids, labels = ids.to(device), labels.to(device)
-            mask = ids != 0
+        train_loss = 0
+        for input_ids, labels, _ in loader:
+            input_ids, labels = input_ids.to(device), labels.to(device)
             optimizer.zero_grad()
-            loss = criterion(model(ids, mask), labels)
+            loss = loss_function(model(input_ids, make_mask(input_ids)), labels)
             loss.backward()
-            nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             optimizer.step()
-            train_total += loss.item() * labels.size(0)
+            train_loss += loss.item() * len(labels)
+
         model.eval()
-        valid_total = 0.0
+        valid_loss = 0
         with torch.no_grad():
-            for ids, _, labels in valid_loader:
-                ids, labels = ids.to(device), labels.to(device)
-                valid_total += criterion(model(ids, ids != 0), labels).item() * labels.size(0)
-        history["train_loss"].append(train_total / len(train_loader.dataset))
-        history["valid_loss"].append(valid_total / len(valid_loader.dataset))
-    return history, time.perf_counter() - started
+            for input_ids, labels, _ in valid_loader:
+                input_ids, labels = input_ids.to(device), labels.to(device)
+                loss = loss_function(model(input_ids, make_mask(input_ids)), labels)
+                valid_loss += loss.item() * len(labels)
+
+        history["train_loss"].append(train_loss / len(loader.dataset))
+        history["valid_loss"].append(valid_loss / len(valid_loader.dataset))
+
+    return history, time.time() - start
 
 
-def save_learning_curve(history: dict[str, list[float]], path: Path) -> None:
+def evaluate(model, loader, device):
+    model.eval()
+    total = correct = true_positive = false_positive = false_negative = 0
+    with torch.no_grad():
+        for input_ids, labels, _ in loader:
+            input_ids, labels = input_ids.to(device), labels.to(device)
+            predictions = model(input_ids, make_mask(input_ids)).argmax(1)
+            total += len(labels)
+            correct += (predictions == labels).sum().item()
+            true_positive += ((predictions == 1) & (labels == 1)).sum().item()
+            false_positive += ((predictions == 1) & (labels == 0)).sum().item()
+            false_negative += ((predictions == 0) & (labels == 1)).sum().item()
+
+    precision = true_positive / max(true_positive + false_positive, 1)
+    recall = true_positive / max(true_positive + false_negative, 1)
+    f1 = 2 * precision * recall / max(precision + recall, 1e-12)
+    return {
+        "accuracy": correct / total,
+        "precision": precision,
+        "recall": recall,
+        "f1": f1,
+    }
+
+
+def positional_experiment():
+    embeddings = {
+        "dog": [1, 1, 0, 0],
+        "bites": [0, 1, 1, 0],
+        "man": [0, 0, 1, 1],
+    }
+    attention = MultiHeadSelfAttention(4, 1).eval()
+    position = PositionalEncoding(4, 10)
+
+    def represent(sentence, use_position):
+        x = torch.tensor([[embeddings[word] for word in sentence]], dtype=torch.float)
+        if use_position:
+            x = position(x)
+        return attention(x)[0].mean(1)
+
+    results = {}
+    for use_position in (False, True):
+        first = represent(["dog", "bites", "man"], use_position)
+        second = represent(["man", "bites", "dog"], use_position)
+        results[use_position] = torch.linalg.vector_norm(first - second).item()
+    return results
+
+
+def attention_experiment():
+    return [
+        {
+            "heads": heads,
+            "d_head": 128 // heads,
+            "parameters": sum(p.numel() for p in MultiHeadSelfAttention(128, heads).parameters()),
+        }
+        for heads in (1, 2, 4, 8)
+    ]
+
+
+def save_plots(history, confusion):
     try:
         import matplotlib.pyplot as plt
     except ImportError:
         return
+
     plt.figure()
     plt.plot(history["train_loss"], label="train")
     plt.plot(history["valid_loss"], label="validation")
     plt.xlabel("Epoch")
-    plt.ylabel("Cross-entropy loss")
+    plt.ylabel("Loss")
     plt.legend()
     plt.tight_layout()
-    plt.savefig(path, dpi=150)
+    plt.savefig(ROOT / "learning_curves.png", dpi=150)
+    plt.close()
+
+    plt.figure()
+    plt.imshow(confusion, cmap="Blues")
+    plt.xlabel("Predicted")
+    plt.ylabel("Actual")
+    plt.colorbar()
+    plt.tight_layout()
+    plt.savefig(ROOT / "confusion_matrix.png", dpi=150)
     plt.close()
 
 
-def run_attention_experiments() -> list[dict[str, float]]:
-    rows = []
-    for heads in (1, 2, 4, 8):
-        model = MultiHeadSelfAttention(128, heads)
-        rows.append({
-            "heads": heads,
-            "d_head": 128 // heads,
-            "parameters": sum(p.numel() for p in model.parameters()),
-        })
-    return rows
+def save_attention_plot():
+    try:
+        import matplotlib.pyplot as plt
+    except ImportError:
+        return
+
+    model = MultiHeadSelfAttention(32, 4).eval()
+    _, weights = model(torch.randn(1, 12, 32))
+    figure, axes = plt.subplots(1, 4, figsize=(10, 3))
+    for head, axis in enumerate(axes):
+        axis.imshow(weights[0, head].detach(), cmap="viridis")
+        axis.set_title(f"Head {head + 1}")
+    figure.tight_layout()
+    figure.savefig(ROOT / "attention_heads.png", dpi=150)
+    plt.close(figure)
 
 
-def run_positional_experiment() -> dict[str, float]:
-    torch.manual_seed(SEED)
-    embeddings = {
-        "dog": torch.tensor([1.0, 1.0, 0.0, 0.0]),
-        "bites": torch.tensor([0.0, 1.0, 1.0, 0.0]),
-        "man": torch.tensor([0.0, 0.0, 1.0, 1.0]),
-    }
-    attention = MultiHeadSelfAttention(4, 1).eval()
-    positional = PositionalEncoding(4, 10).eval()
-
-    def representation(sentence: list[str], use_pe: bool) -> torch.Tensor:
-        x = torch.stack([embeddings[token] for token in sentence])[None]
-        if use_pe:
-            x = positional(x)
-        return attention(x)[0].mean(1)
-
-    result = {}
-    for use_pe in (False, True):
-        distance = torch.linalg.vector_norm(
-            representation(["dog", "bites", "man"], use_pe)
-            - representation(["man", "bites", "dog"], use_pe)
-        )
-        result[f"distance_pe_{str(use_pe).lower()}"] = float(distance)
-    return result
-
-
-def run_classification() -> tuple[list[dict[str, object]], dict[str, list[float]]]:
-    seed_everything()
-    dataset_path = find_dataset()
-    max_samples = int(os.getenv("LAB7_MAX_SAMPLES", "4000"))
+def classification_experiment():
+    set_seed()
+    limit = int(os.getenv("LAB7_MAX_SAMPLES", "4000"))
     epochs = int(os.getenv("LAB7_EPOCHS", "3"))
     max_length = int(os.getenv("LAB7_MAX_LENGTH", "128"))
     batch_size = int(os.getenv("LAB7_BATCH_SIZE", "64"))
-    samples = read_imdb(dataset_path, max_samples)
-    vocab = build_vocab(samples)
-    full = ReviewDataset(samples, vocab, max_length)
-    train_size = int(0.8 * len(full))
-    valid_size = len(full) - train_size
-    train_set, valid_set = random_split(
-        full, [train_size, valid_size], generator=torch.Generator().manual_seed(SEED)
+    data = read_data(limit)
+    vocab = make_vocab(data)
+    dataset = Reviews(data, vocab, max_length)
+
+    train_size = int(len(dataset) * 0.7)
+    valid_size = int(len(dataset) * 0.15)
+    test_size = len(dataset) - train_size - valid_size
+    train_set, valid_set, test_set = random_split(
+        dataset,
+        [train_size, valid_size, test_size],
+        generator=torch.Generator().manual_seed(SEED),
     )
     train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
     valid_loader = DataLoader(valid_set, batch_size=batch_size)
+    test_loader = DataLoader(test_set, batch_size=batch_size)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    configs = [
-        ("LSTM", LSTMClassifier(len(vocab), 64, 64, 0)),
-        ("Transformer", TransformerClassifier(
-            len(vocab), d_model=64, n_heads=4, d_ff=128, n_layers=2,
-            max_len=max_length, pad_idx=0
-        )),
-    ]
-    rows = []
-    last_history = {}
-    for name, model in configs:
+
+    models = {
+        "LSTM": LSTMClassifier(len(vocab)),
+        "Transformer": TransformerClassifier(
+            len(vocab), d_model=64, n_heads=4, d_ff=128,
+            n_layers=2, max_len=max_length, pad_idx=0,
+        ),
+    }
+    results = []
+    transformer_history = None
+    transformer_confusion = [[0, 0], [0, 0]]
+
+    for name, model in models.items():
         model.to(device)
         history, seconds = train(model, train_loader, valid_loader, device, epochs)
-        metrics = evaluate(model, valid_loader, device)
-        rows.append({
+        metrics = evaluate(model, test_loader, device)
+        results.append({
             "model": name,
             "parameters": sum(p.numel() for p in model.parameters()),
-            "training_time_seconds": round(seconds, 3),
+            "training_seconds": round(seconds, 2),
             **{key: round(value, 4) for key, value in metrics.items()},
         })
         if name == "Transformer":
-            last_history = history
-    return rows, last_history
+            transformer_history = history
+            model.eval()
+            with torch.no_grad():
+                for input_ids, labels, _ in test_loader:
+                    predictions = model(
+                        input_ids.to(device), make_mask(input_ids.to(device))
+                    ).argmax(1).cpu()
+                    for actual, predicted in zip(labels, predictions):
+                        transformer_confusion[actual][predicted] += 1
+
+    save_plots(transformer_history, transformer_confusion)
+    return results
 
 
-def main() -> None:
-    LAB7.mkdir(exist_ok=True)
-    print("Positional experiment:", run_positional_experiment())
-    print("Head experiment:", run_attention_experiments())
-    rows, history = run_classification()
-    with (LAB7 / "results.csv").open("w", newline="", encoding="utf-8") as file:
+def main():
+    print("Permutation distances:", positional_experiment())
+    print("Attention heads:", attention_experiment())
+    rows = classification_experiment()
+    with (ROOT / "results.csv").open("w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=rows[0].keys())
         writer.writeheader()
         writer.writerows(rows)
-    save_learning_curve(history, LAB7 / "learning_curves.png")
-    print("Classification results:")
+    save_attention_plot()
     for row in rows:
         print(row)
 
