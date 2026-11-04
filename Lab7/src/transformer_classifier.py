@@ -19,7 +19,13 @@ class TransformerClassifier(nn.Module):
         super().__init__()
 
         assert d_model % n_heads == 0
+        assert n_layers >= 1
 
+        self.d_model = d_model
+        self.n_heads = n_heads
+        self.n_layers = n_layers
+        self.num_classes = num_classes
+        self.max_len = max_len
         self.pad_idx = pad_idx
 
         # Token Embedding
@@ -65,7 +71,8 @@ class TransformerClassifier(nn.Module):
         self,
         input_ids,
         attention_mask=None,
-        return_attention=False
+        return_attention=False,
+        debug_shapes=False
     ):
         # input_ids: [B, T]
 
