@@ -27,6 +27,9 @@ class MultiHeadSelfAttention(nn.Module):
         return x.transpose(1, 2)
 
     def forward(self, x, attention_mask = None):
+        if x.ndim != 3:
+            raise ValueError("x must have shape [batch, sequence, d_model].")
+
         B, T, D = x.shape
 
         # Q, K, V
@@ -41,6 +44,10 @@ class MultiHeadSelfAttention(nn.Module):
 
         # Padding mask
         if attention_mask is not None:
+            if attention_mask.shape != (B, T):
+                raise ValueError(
+                    "attention_mask must have shape [batch, sequence]."
+                )
             valid_keys = attention_mask[:, None, None, :]
             scores = scores.masked_fill(
                 ~valid_keys.bool(),
