@@ -1,5 +1,9 @@
-from src.positional_encoding import PositionalEncoding
-from src.transformer_block import TransformerBlock
+try:
+    from .positional_encoding import PositionalEncoding
+    from .transformer_block import TransformerBlock
+except ImportError:
+    from positional_encoding import PositionalEncoding
+    from transformer_block import TransformerBlock
 
 import torch.nn as nn
 

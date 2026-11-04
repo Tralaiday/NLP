@@ -1,4 +1,7 @@
-from src.multi_head_self_attention import MultiHeadSelfAttention
+try:
+    from .multi_head_self_attention import MultiHeadSelfAttention
+except ImportError:
+    from multi_head_self_attention import MultiHeadSelfAttention
 
 import torch.nn as nn
 
