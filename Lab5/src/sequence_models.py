@@ -1,49 +1,102 @@
-import torch.nn as nn
+"""Recurrent classifiers used by the sequence classification lab."""
+
+import torch
+from torch import nn
 from torch.nn.utils.rnn import pack_padded_sequence
 
-class RNNClassifier(nn.Module):
+
+class RecurrentClassifier(nn.Module):
+    """Embedding plus a configurable RNN, LSTM, or GRU binary classifier."""
+
     def __init__(
         self,
-        vocab_size,
-        embedding_dim=100,
-        hidden_dim=128,
-        pad_id=0
+        vocab_size: int,
+        embedding_dim: int = 100,
+        hidden_dim: int = 128,
+        cell_type: str = "rnn",
+        pad_id: int = 0,
+        dropout: float = 0.0,
     ):
         super().__init__()
+        if cell_type not in {"rnn", "lstm", "gru"}:
+            raise ValueError("cell_type phải là 'rnn', 'lstm' hoặc 'gru'.")
+        if vocab_size <= 0 or embedding_dim <= 0 or hidden_dim <= 0:
+            raise ValueError("Các kích thước model phải lớn hơn 0.")
 
+        self.cell_type = cell_type
         self.embedding = nn.Embedding(
             vocab_size,
             embedding_dim,
-            padding_idx=pad_id
+            padding_idx=pad_id,
         )
-
-        self.rnn = nn.RNN(
+        recurrent_class = {
+            "rnn": nn.RNN,
+            "lstm": nn.LSTM,
+            "gru": nn.GRU,
+        }[cell_type]
+        self.encoder = recurrent_class(
             input_size=embedding_dim,
             hidden_size=hidden_dim,
-            batch_first=True
+            batch_first=True,
         )
+        self.dropout = nn.Dropout(dropout)
+        self.classifier = nn.Linear(hidden_dim, 1)
 
-        self.fc = nn.Linear(hidden_dim, 1)
+    def forward(
+        self,
+        input_ids: torch.Tensor,
+        lengths: torch.Tensor,
+    ) -> torch.Tensor:
+        if input_ids.ndim != 2 or lengths.ndim != 1:
+            raise ValueError("input_ids phải là (B, T), lengths phải là (B,).")
+        if input_ids.size(0) != lengths.size(0):
+            raise ValueError("Số sample của input_ids và lengths không khớp.")
+        if torch.any(lengths <= 0):
+            raise ValueError("Mọi sequence phải có ít nhất một token.")
 
-    def forward(self, input_ids, lengths):
-        # (B, T) -> (B, T, embedding_dim)
         embedded = self.embedding(input_ids)
-
-        # Bỏ qua các timestep padding
         packed = pack_padded_sequence(
             embedded,
-            lengths.cpu(),
+            lengths.detach().cpu(),
             batch_first=True,
-            enforce_sorted=False
+            enforce_sorted=False,
         )
+        _, hidden_state = self.encoder(packed)
+        hidden = self._extract_final_hidden(hidden_state)
+        return self.classifier(self.dropout(hidden)).squeeze(-1)
 
-        # Hidden state cuối cùng của các token thực
-        _, h_n = self.rnn(packed)
+    def _extract_final_hidden(self, hidden_state: torch.Tensor | tuple) -> torch.Tensor:
+        if self.cell_type == "lstm":
+            hidden_state = hidden_state[0]
+        return hidden_state[-1]
 
-        # (1, B, hidden_dim) -> (B, hidden_dim)
-        final_hidden = h_n[-1]
 
-        # (B, hidden_dim) -> (B,)
-        logits = self.fc(final_hidden).squeeze(1)
+def build_sequence_classifier(
+    model_type: str,
+    vocab_size: int,
+    pad_id: int,
+    embedding_dim: int = 100,
+    hidden_dim: int = 128,
+    dropout: float = 0.0,
+) -> RecurrentClassifier:
+    """Create one recurrent architecture using shared experiment settings."""
+    return RecurrentClassifier(
+        vocab_size=vocab_size,
+        embedding_dim=embedding_dim,
+        hidden_dim=hidden_dim,
+        cell_type=model_type,
+        pad_id=pad_id,
+        dropout=dropout,
+    )
 
-        return logits
+
+def count_trainable_parameters(model: nn.Module) -> int:
+    """Return the number of trainable parameters."""
+    return sum(
+        parameter.numel()
+        for parameter in model.parameters()
+        if parameter.requires_grad
+    )
+
+
+RNNClassifier = RecurrentClassifier
