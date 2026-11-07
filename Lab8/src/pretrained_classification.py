@@ -7,24 +7,23 @@ from typing import Dict, Iterable, Tuple
 import numpy as np
 import pandas as pd
 import torch
-from sklearn.metrics import (
-    accuracy_score,
-    f1_score,
-    precision_score,
-    recall_score
-)
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from torch import nn
 from torch.utils.data import Dataset
 from transformers import AutoModel
 
-def set_seed(seed: int = 42) -> None:
+
+def set_seed(seed: int = 2026) -> None:
+    """Make experiments as reproducible as the selected hardware allows."""
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
 
+
 def load_imdb(path: str) -> pd.DataFrame:
+    """Load IMDb reviews and map sentiment labels to 0 (negative) / 1 (positive)."""
     data = pd.read_csv(path)
     required = {"review", "sentiment"}
     missing = required.difference(data.columns)
@@ -47,6 +46,7 @@ def split_imdb(
     validation_size: float = 0.2,
     seed: int = 2026,
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Create stratified train/validation/test splits."""
     from sklearn.model_selection import train_test_split
 
     if train_size <= 0 or validation_size <= 0 or train_size + validation_size >= 1:
@@ -73,30 +73,38 @@ def split_imdb(
 
 
 class IMDbDataset(Dataset):
+    """IMDb examples tokenized once in batches during dataset creation."""
 
     def __init__(self, data: pd.DataFrame, tokenizer, max_length: int = 128):
         self.texts = data["review"].tolist()
         self.labels = data["label"].tolist()
-        self.tokenizer = tokenizer
-        self.max_length = max_length
+        encoded = tokenizer(
+            self.texts,
+            padding="max_length",
+            truncation=True,
+            max_length=max_length,
+            return_tensors="pt",
+        )
+        self.encodings = {
+            key: value
+            for key, value in encoded.items()
+        }
 
     def __len__(self) -> int:
         return len(self.labels)
 
     def __getitem__(self, index: int) -> Dict[str, torch.Tensor]:
-        encoded = self.tokenizer(
-            self.texts[index],
-            padding="max_length",
-            truncation=True,
-            max_length=self.max_length,
-            return_tensors="pt",
-        )
-        item = {key: value.squeeze(0) for key, value in encoded.items()}
+        item = {
+            key: value[index]
+            for key, value in self.encodings.items()
+        }
         item["labels"] = torch.tensor(self.labels[index], dtype=torch.long)
         return item
 
 
 class PretrainedClassifier(nn.Module):
+    """A pretrained encoder followed by a minimal [CLS] classification head."""
+
     def __init__(
         self,
         model_name: str = "bert-base-uncased",
@@ -132,7 +140,9 @@ def train_one_epoch(
     loader: Iterable[Dict[str, torch.Tensor]],
     optimizer: torch.optim.Optimizer,
     device: torch.device,
+    scaler: torch.cuda.amp.GradScaler | None = None,
 ) -> float:
+    """Train for one epoch and return mean cross-entropy loss."""
     model.train()
     criterion = nn.CrossEntropyLoss()
     total_loss = 0.0
@@ -143,11 +153,18 @@ def train_one_epoch(
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
 
-        optimizer.zero_grad()
-        logits = model(input_ids, attention_mask)
-        loss = criterion(logits, labels)
-        loss.backward()
-        optimizer.step()
+        optimizer.zero_grad(set_to_none=True)
+        use_amp = scaler is not None
+        with torch.cuda.amp.autocast(enabled=use_amp):
+            logits = model(input_ids, attention_mask)
+            loss = criterion(logits, labels)
+        if scaler is None:
+            loss.backward()
+            optimizer.step()
+        else:
+            scaler.scale(loss).backward()
+            scaler.step(optimizer)
+            scaler.update()
 
         total_loss += loss.item() * labels.size(0)
         total_examples += labels.size(0)
@@ -163,6 +180,7 @@ def evaluate(
     loader: Iterable[Dict[str, torch.Tensor]],
     device: torch.device,
 ) -> Dict[str, object]:
+    """Return loss, classification metrics, labels, predictions and probabilities."""
     model.eval()
     criterion = nn.CrossEntropyLoss()
     total_loss = 0.0
@@ -175,9 +193,10 @@ def evaluate(
         input_ids = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         batch_labels = batch["labels"].to(device)
-        logits = model(input_ids, attention_mask)
-        loss = criterion(logits, batch_labels)
-        batch_probabilities = torch.softmax(logits, dim=-1)
+        with torch.cuda.amp.autocast(enabled=device.type == "cuda"):
+            logits = model(input_ids, attention_mask)
+            loss = criterion(logits, batch_labels)
+        batch_probabilities = torch.softmax(logits.float(), dim=-1)
         batch_predictions = batch_probabilities.argmax(dim=-1)
 
         total_loss += loss.item() * batch_labels.size(0)
@@ -202,6 +221,7 @@ def evaluate(
 
 
 def count_parameters(model: nn.Module, trainable_only: bool = False) -> int:
+    """Count model parameters, optionally counting only trainable parameters."""
     return sum(
         parameter.numel()
         for parameter in model.parameters()
@@ -217,16 +237,26 @@ def fit(
     epochs: int = 1,
     learning_rate: float = 2e-5,
 ) -> Dict[str, object]:
+    """Train a model and return its history and elapsed training time."""
     optimizer = torch.optim.AdamW(
         (parameter for parameter in model.parameters() if parameter.requires_grad),
         lr=learning_rate,
     )
+    scaler = torch.cuda.amp.GradScaler(enabled=device.type == "cuda")
     history = []
+    last_validation_metrics = None
     start = time.perf_counter()
 
     for epoch in range(epochs):
-        train_loss = train_one_epoch(model, train_loader, optimizer, device)
+        train_loss = train_one_epoch(
+            model,
+            train_loader,
+            optimizer,
+            device,
+            scaler=scaler if device.type == "cuda" else None,
+        )
         validation_metrics = evaluate(model, validation_loader, device)
+        last_validation_metrics = validation_metrics
         history.append(
             {
                 "epoch": epoch + 1,
@@ -239,5 +269,6 @@ def fit(
 
     return {
         "history": history,
+        "validation_metrics": last_validation_metrics,
         "training_time_seconds": time.perf_counter() - start,
     }
