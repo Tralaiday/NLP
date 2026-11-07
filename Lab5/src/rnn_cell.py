@@ -6,8 +6,11 @@ class SimpleRNNCell:
         self.input_size = input_size
         self.hidden_size = hidden_size
 
+        # Khởi tạo ma trận trọng số W_xh và W_hh
         self.W_xh = np.random.randn(hidden_size, input_size) * 0.01
         self.W_hh = np.random.randn(hidden_size, hidden_size) * 0.01
+
+        # Khởi tạo bias
         self.b_h = np.zeros((hidden_size, 1))
 
     def __tanh(self, x):
@@ -33,3 +36,4 @@ if __name__ == '__main__':
     print(f"Kích thước của x_t: {x_t.shape}")
     print(f"Kích thước của h_prev: {h_prev.shape}")
     print(f"Kích thước đầu ra h_t: {h_t.shape}")
+    print(h_t)
