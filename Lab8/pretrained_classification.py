@@ -79,26 +79,31 @@ def split_imdb(
 
 
 class IMDbDataset(Dataset):
-    """Tokenized IMDb examples for a Hugging Face sequence classifier."""
+    """IMDb examples tokenized once in batches during dataset creation."""
 
     def __init__(self, data: pd.DataFrame, tokenizer, max_length: int = 128):
         self.texts = data["review"].tolist()
         self.labels = data["label"].tolist()
-        self.tokenizer = tokenizer
-        self.max_length = max_length
+        encoded = tokenizer(
+            self.texts,
+            padding="max_length",
+            truncation=True,
+            max_length=max_length,
+            return_tensors="pt",
+        )
+        self.encodings = {
+            key: value
+            for key, value in encoded.items()
+        }
 
     def __len__(self) -> int:
         return len(self.labels)
 
     def __getitem__(self, index: int) -> Dict[str, torch.Tensor]:
-        encoded = self.tokenizer(
-            self.texts[index],
-            padding="max_length",
-            truncation=True,
-            max_length=self.max_length,
-            return_tensors="pt",
-        )
-        item = {key: value.squeeze(0) for key, value in encoded.items()}
+        item = {
+            key: value[index]
+            for key, value in self.encodings.items()
+        }
         item["labels"] = torch.tensor(self.labels[index], dtype=torch.long)
         return item
 
@@ -141,6 +146,7 @@ def train_one_epoch(
     loader: Iterable[Dict[str, torch.Tensor]],
     optimizer: torch.optim.Optimizer,
     device: torch.device,
+    scaler: torch.cuda.amp.GradScaler | None = None,
 ) -> float:
     """Train for one epoch and return mean cross-entropy loss."""
     model.train()
@@ -153,11 +159,18 @@ def train_one_epoch(
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
 
-        optimizer.zero_grad()
-        logits = model(input_ids, attention_mask)
-        loss = criterion(logits, labels)
-        loss.backward()
-        optimizer.step()
+        optimizer.zero_grad(set_to_none=True)
+        use_amp = scaler is not None
+        with torch.cuda.amp.autocast(enabled=use_amp):
+            logits = model(input_ids, attention_mask)
+            loss = criterion(logits, labels)
+        if scaler is None:
+            loss.backward()
+            optimizer.step()
+        else:
+            scaler.scale(loss).backward()
+            scaler.step(optimizer)
+            scaler.update()
 
         total_loss += loss.item() * labels.size(0)
         total_examples += labels.size(0)
@@ -186,9 +199,10 @@ def evaluate(
         input_ids = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         batch_labels = batch["labels"].to(device)
-        logits = model(input_ids, attention_mask)
-        loss = criterion(logits, batch_labels)
-        batch_probabilities = torch.softmax(logits, dim=-1)
+        with torch.cuda.amp.autocast(enabled=device.type == "cuda"):
+            logits = model(input_ids, attention_mask)
+            loss = criterion(logits, batch_labels)
+        batch_probabilities = torch.softmax(logits.float(), dim=-1)
         batch_predictions = batch_probabilities.argmax(dim=-1)
 
         total_loss += loss.item() * batch_labels.size(0)
@@ -234,12 +248,21 @@ def fit(
         (parameter for parameter in model.parameters() if parameter.requires_grad),
         lr=learning_rate,
     )
+    scaler = torch.cuda.amp.GradScaler(enabled=device.type == "cuda")
     history = []
+    last_validation_metrics = None
     start = time.perf_counter()
 
     for epoch in range(epochs):
-        train_loss = train_one_epoch(model, train_loader, optimizer, device)
+        train_loss = train_one_epoch(
+            model,
+            train_loader,
+            optimizer,
+            device,
+            scaler=scaler if device.type == "cuda" else None,
+        )
         validation_metrics = evaluate(model, validation_loader, device)
+        last_validation_metrics = validation_metrics
         history.append(
             {
                 "epoch": epoch + 1,
@@ -252,5 +275,6 @@ def fit(
 
     return {
         "history": history,
+        "validation_metrics": last_validation_metrics,
         "training_time_seconds": time.perf_counter() - start,
     }
